@@ -1,0 +1,38 @@
+
+-Nace por la nececidad de hacer algo con la concurrencia y poder scalar 
+
+scaling up: Vertical se trata de aumentar recursos, aprovechar los que hay ejemplo 
+Threads son solo en scaling up
+sacaling out or Horizontal scaling se trata de más server en el cluster
+
+-Recordar que los llamados a BD, otro contexto, son side effects 
+-Journal como tipo de base de datos para almacenar todos los eventos que han pasado y event sourcin como técnica a usar para que al momento de que se caiga el sistema se pueda volver a retormar o re-hacer
+la historia.
+
+
+-Sharding como divisón o particionamiento de tareas más grandes
+
+
+Polling es cuando preguntamos cada x tiempo por un recurso (disponibilidad, nueva información etc)
+-  La idea de akka es hacer push a los clientes acerca del suceso de un Evento x
+- Los eventos desacoplan los componentes de un sistema
+- publish-subscribe mechanism
+
+The event-driven approach solves the polling problem
+Comunicacion entre Objetos con mensajes, ya que los objetos deben manejar su propio estado interno, en lugar de que algo externo lo afecte
+Muchas veces a un componente no le interesa si otro se cae, ya que el componente hace lo que él debe hacer PERO al usuario, cliente, aplicación si se le deha hacer 
+saber de que un componente se cae, para reiniciarlo por ejemplo, AHÍ ES CUANDO APLICA LA ESTRATEGIA SE SUPERVISOR E HIJOS 
+
+
+EL supervisor decide si continuar, reiniciar el componente(objeto o actor), por ejemplo si el que está caido es el compoenente ppal entonces stop, pero si es el componente de envío de correos
+entonces envié a reiniciar a ver si funciona :) 
+
+
+PARALELISMO habla de realizar procesos simultáneamente 
+Concurrencia habla de procesos que pueden coincidir en el tiempo, pero no necesariaemte CORREN SIMULTÁNEAMENTE, ejemplo en un mismo cpu y cada uno tiene su participacipón en 
+el tiempo.
+
+Sí la aplicacion la pensamos para scalar en varios server entonces debe ser asincrona la comunicacion (pg 36)
+Imagine el supervisor siendo Síncrono y esperando por la respuesta de cada uno se sus hijos (para todo el aplicativo )
+
+lOS Actores no permiten acceso a estado interno
