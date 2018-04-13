@@ -36,3 +36,21 @@ Sí la aplicacion la pensamos para scalar en varios server entonces debe ser asi
 Imagine el supervisor siendo Síncrono y esperando por la respuesta de cada uno se sus hijos (para todo el aplicativo )
 
 lOS Actores no permiten acceso a estado interno
+
+Actor Operations:
+create, send, become, and supervise
+
+En objetos  hemos visto toda la vida que es posible alterar el estado entre objetos, con actores NO!, la comunicacipón es solo por mensajes que la mayor parte de l tiempo son 
+fire and forget, si se requiere respeusta entonces devolver un acknowledge message.
+
+An actor can create other actors
+
+BECOME: Los actores pueden ca,biar su comportamiento(dependiendo del mensaje que se el envió por ejemplo) 
+S UPERVISE: Supervisar los actores que un el mismo actor supervisor crea
+
+lO primero que hace un sistema cuando se levan ta es crear el ActorSystem
+
+A scheduler can send messages to actors periodically
+
+
+Messages are sent to the actor’s ActorRef
