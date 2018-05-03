@@ -139,20 +139,43 @@ pero si falla entonces
 
 :::::5.4 Combining futures:::::::::
 La programación funcional ofrece otros combinators para Futuros:
-
+firstCompletedOf::::::::::::::::::::
 Future.firstCompletedOf: retorna el resultado del primer servicio que respondió (see oa 110 real), ojo puede responder fallo o success
 Y si nos queremos blindar entonces unsamos la función find PARA filtrar los que terminaron exitosamente
 
+Eg:
+val fastestSuccessfulResponse: Future[Option[Weather]] =
+Future.find(futures)(maybeWeather => !maybeWeather.isEmpty)
+.map(_.flatten). De lo anterior Result needs to be flattened, since find takes a
+TraversableOnce[Future[T]] and returns Future[Option[T]],
+and in this case T is actually Option[T]. (The futures value is
+List[Future[Option[Weather]]], not List[Future[Weather]].)
+
+Zip::::::::::::::::::::: La idea es combinar dos futuros que se ejecutaron en paralero y cuyo resultado (en ambos) se requiere para la
+respuesta final, es decir que con futuros podemos paralelizar computos que no dependan uno de otro :) 
+futureR.zip(futureP), ..hace Zip de Future[RouteByCar] y
+Future[PublicTransportAdvice]
+para devolver un  futuro de los resultados de cada uno Future[(RouteByCar,PublicTransportAdvice)](Que es una tupla)
+
+Ver pg111 y 112 para el uso de for-comprehension y evitar tanta línea de codigo (pg 111)
+
+for(
+(route, advice) <- futureRoute.zip(futurePublicTransport);
+travelAdvice = TravelAdvice(route, advice)
+) yield info.copy(travelAdvice = Some(travelAdvice))
 
 
+Traverse artists:::::::::::::::::::::
+Future.sequence (es una version de traverse de scala) hace una especie de tortugazo eg:
+Turns the Seq[Future[Event]] into a
+Future[Seq[Event]].
+
+Pero con traverse es mejor porque se recorre la lista que se desea y al mismo tiempo crea un FUTURE con el resultado.(see pg 113 real)
 
 
-Fold: 
-
-Zip: 
-
-Traverse artists:
-
+Fold::::::::::::::::::::: 
+Se usa para combinar dos valores en uno (especie de reduce, en donde elementos de un mismo tipo se reduce a uno o a un set más pequeño)
+en el ejemplo del libro 2 TicketInfo se deben reducir a uno (ps 113 R)
 
 
 
