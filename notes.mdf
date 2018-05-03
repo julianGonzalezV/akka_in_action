@@ -54,3 +54,106 @@ A scheduler can send messages to actors periodically
 
 
 Messages are sent to the actor’s ActorRef
+
+
+
+
+When an actor crash the supervisor has four options when deciding
+what to do with the actor:
+ Restart—The actor must be re-created from its Props. After it’s restarted (or
+rebooted, if you will), the actor will continue to process messages. Since the rest
+of the application uses an ActorRef to communicate with the actor, the new
+actor instance will automatically get the next messages.
+ Resume—The same actor instance should continue to process messages; the
+crash is ignored.
+ Stop—The actor must be terminated. It will no longer take part in processing
+messages.
+ Escalate—The supervisor doesn’t know what to do with it and escalates the problem
+to its parent, which is also a supervisor.
+
+
+deadLettersActorRef: Is a special ActorRef that receives all messages that are sent to dead actors.
+
+
+Supervision Strategies:
+The OneForOneStrategy determines that child actors won’t share the same
+
+AllForOneStrategy: Uses the same decision for all child actors even if only one crashed.
+
+stoppingStrategy: It will stop any child that crashes on any Exception.
+
+supervisor Strategies:::
+Resume the child, ignore errors, and keep processing with the same actor
+instance.
+ Restart the child, remove the crashed actor instance, and replace it with a fresh
+actor instance.
+ Stop the child and terminate the child permanently.
+ Escalate the failure and let the parent actor decide what action needs to be taken.
+
+
+Cuando se tiene case Terminated(`logProcessor`)  con ése estilo de comillas quiere decir que 
+cuando se termine (especie del kill) el actor logProcessor entonces debohacer algo, como por ejemplo también terminar el 
+actor actual (ver pg 89 la real 106 la del pdf del libro, note como FileWatcher se termina al recibir el mensaje terminate de props , mediante monitoring, ojo monitoring -watch and unwatch es diferente a Supervision)
+
+
+Promise[T]: A promise can be used to wrap a callback API
+val future: Future[RecordMetadata] = promise.future
+val callback = new Callback() {
+def onCompletion(metadata: RecordMetadata, e: Exception): Unit = {
+if (e != null) promise.failure(e)
+else promise.success(metadata)
+}
+}
+producer.send(record, callback)
+future
+}
+
+DefaultPromise. DefaultPromise is built to be used
+from several threads at the same time
+
+::::::5.3 Futuristic errors(page 104 real):::::::::::::::
+con futureFail.onComplete podemos obtener el error de un futuro 
+
+Fatal exceptions are never handled by a future.
+
+Cuando alguna funcion o método retorna UNIT no se puede seguir encadenando el computo (pensando en esto, es como el void de java)
+
+Usamos case clases para representar estructuras del negocio , al usar "case" estamos asegurando que son estructuras inmutables y la idea
+es que sea así, sino corremos el riesgo de compartir el mismo objeto en futuros (Future) diferentes, share mutable state.
+
+
+Pero a pesar de que no se pueda continuar con el computo, se puede hacer uso de un recover method:
+The recover method will replace
+the failed Future with a TicketInfo
+with an empty route inside
+a new Future.
+This method makes it possible to
+define what result must be returned when exceptions occur.
+
+getTraffic(ticketInfo).recover {
+case _: TrafficServiceException => ticketInfo
+}
+
+sí getTraffic se ejecuta correctamente entonces el retorna lo que debe retornar (en este ejemplo del libro por ejemplo es un Future[TicketInfo])
+pero si falla entonces 
+
+:::::5.4 Combining futures:::::::::
+La programación funcional ofrece otros combinators para Futuros:
+
+Future.firstCompletedOf: retorna el resultado del primer servicio que respondió (see oa 110 real), ojo puede responder fallo o success
+Y si nos queremos blindar entonces unsamos la función find PARA filtrar los que terminaron exitosamente
+
+
+
+
+
+Fold: 
+
+Zip: 
+
+Traverse artists:
+
+
+
+
+::::::::::::::::::::::::::::::::::
