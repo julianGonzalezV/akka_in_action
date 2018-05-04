@@ -56,6 +56,14 @@ A scheduler can send messages to actors periodically
 Messages are sent to the actor’s ActorRef
 
 
+:::::::::::::::::DIFERENCIAS ENTRE ASK, TELL, FORWARD::::::::::::::
+> Tell sets the sender as the actor sending the message.
+	Tell ! means “fire-and-forget”, e.g. send a message asynchronously and return immediately. Also known as tell.
+> Forward keeps the original sender of the message.
+> Ask or ? sends a message asynchronously and returns a Future representing a possible reply. Also known as ask.
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
 
 
 When an actor crash the supervisor has four options when deciding
@@ -180,3 +188,31 @@ en el ejemplo del libro 2 TicketInfo se deben reducir a uno (ps 113 R)
 
 
 ::::::::::::::::::::::::::::::::::
+5.5 Combining futures with actors
+::::::::::::::::::::::::::::::::::
+pipe construc: To send the result of a Future to an Actor
+
+Be aware when using futures from actors that the ActorContext provides a current
+view of the Actor. And since actors are stateful, it’s important to make sure that the values
+that you close over aren’t mutable from another thread. The easiest way to prevent
+this problem is to use immutable data structures and pipe the future to an actor, as
+shown in the example. Another is to “capture” the current value of sender() in a value.
+
+Futures can be used from actors, but you need to avoid referencing
+mutable actor state from a future. Lo anterior por ejemplo hay actores que modifican el estado, por ejemplo de un objeto dentro (ver primeros capitulos)
+
+The sender reference of an actor needs to
+be captured into a value before it can be safely used, for instance. Futures are used in
+the Actor API as the response of an ask method. Future results can also be provided to
+an actor with the pipe pattern.
+
+:::self-questons::
+Cuando hacer que una función o método retorne su resultado envuelto en un futuro?
+R/ Hasta ahora lo usaría para procesos que toman un tiempo considerado en ejecutarse, no tiene sentido poner a esperar al cliente
+La otra es que puede mejorar performance de lo que ya tenemos, porque la idea es que se pueda paralelizar llamados a funciones o actores que no dependen de si
+o tener varios que hagan lo mismo (apuntando por ejemplo a diferentes recursos otra bd, otro servicio rest que haga lo mismo etc ) y obtrener el valor del que
+primero responda.
+
+
+
+

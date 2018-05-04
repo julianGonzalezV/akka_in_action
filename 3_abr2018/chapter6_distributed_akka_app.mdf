@@ -1,0 +1,67 @@
+::::::Your first distributed Akka app:::::::::::::::::::
+6.1 Scaling out::
+
+RPC es considerado bloqueante:
+Most network technologies use a blocking remote procedure call (RPC)–style
+
+La idea de actores es que no tengamos que modificar nuestro código para empezar a correr en un ambiente distribuido.
+
+terminology:
+Node: a running application that communicates
+across the network. It’s a connection point in a network topology. It’s part of a
+distributed system. Many nodes can run on one server, or they can run on separate
+servers
+
+To communicate between nodes some Examples of transport protocols are TCP/IP and UDP.
+
+Protocol data units: It contains a stored representation of the messages as byte arrays.
+
+Las topologías comunes son:
+> Local, un solo nodo
+> CS, un nodo cliente y otro nodo servidor
+> Estrella, un nodo central y los otro nodos worker apuntan a el 
+> Ring, anillo un nodo se comunica con el anterior y el siguiente
+>  Per to peer / mesh: cada nodo se comunica con todos los nodos de la red 
+> Tree, un nodo padre tiene se comunica con sus hijos, un hijo puede tener más hijos
+
+
+group membership: When nodes are part of the same distributed system It can be:
+	1)static: less resilient, a node can’t simply be replaced by another node running on a different network address
+	2) dynamic
+	
+discovery mechanism: When new nodes can find an existing group on
+the network, since the network addresses aren’t statically defined
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+:::::::::::::::6.1.2 Reasons for a distributed programming model:
+
+exact opposite: A distributed programming model for both a distributed and a local environment.
+
+:::::::::::::::6.2 Scaling out with remoting:::::::::::::::
+Dependencias requeridas:
+"com.typesafe.akka" %% "akka-remote" % akkaVersion,
+"com.typesafe.akka" %% "akka-multi-node-testkit" % akkaVersion % "test",
+
+
+sbt update : Para actualizar dependencias
+
+
+class SimpleActor extends Actor{
+  def receive = {
+    case m => println(s"aqui el mensaje $m")
+  }
+}
+
+
+
+> Los mensajes son serializados y deserializados entre nodos, tambien se puede tener un serializador personalizado
+
+:::::::::::::::6.2.3 Remote lookup:::::::::::::::
+
+
+
+
+
+
+
+
