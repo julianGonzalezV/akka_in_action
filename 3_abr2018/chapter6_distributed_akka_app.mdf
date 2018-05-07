@@ -60,6 +60,17 @@ class SimpleActor extends Actor{
 
 
 
+Simply watching an ActorRef will ensure that the
+actor gets notified of termination of an actor,
+
+
+EN RESUMEN LO QUE HACE REMOTE LOOKUPPROOXY es validar si el actor (en este caso del backend user/boxOffice) 
+se encuentra disponible (identify) cada 3 segundos sino (porque puede pasar que primero se levantó el front) vuelve e intenta a los 
+3 segundos para ver si si está disponible, despues de que se encuentre en un estado disponible lo pasa a un estado Activo y ya sigue recibiendo mensajes 
+normal (es un proxy que interviene dichos mensajes ), tambiíen se puede dar que vuelva y no se encuentre disponible, de esta manajera vuelve y cambia su estado a Indentify (ejecutarse cada 3 segundos para validar disponibilidad)
+
+::::::::::::::::::::::::::::::::::::.::::::::::::::::::::::::::::::::::::.
+
 
 
 
