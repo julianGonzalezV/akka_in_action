@@ -1,0 +1,49 @@
+> Se muestra como se configura los archivos de propiedades dentro del sistema, existen extensiones .cong .properties .
+> Se ve como reescribir propiedates, por ejemplo por cada ambiente la conección a base de datos es otra 
+> Muestrab el formato HOCON, que se basa en Json pero es aúm ás fácil de leer.
+>
+
+
+7.1.4 Multiple systems::::::::::
+
+> Caso1 : Se tienen varias JVMs que corren en el mismo ambiente, usando los MISMOS ARCHIVOS
+ Ya se había mostrado el uso de System Properties eje -D ,pero esto hace que se comparta la misma configuración para todos los subsistemas cuando 
+ en realidad solo se necesita una pequeña parte. Lo anterior se resuelve con INCLUDE OPTION
+ 
+ eje
+ baseConfig.conf, muestra como existen propiedades que pueden ser la misma para todos  los subsistemas pero a la vez pueden existir algunas que no son igual 
+por lo cual requieren ser reemplazadas see pg 155 real
+ subAppl.conf muestra como se hace  include "baseConfig"
+ 
+ 
+>Que pasa sí no se encuentran los subsistemas en diferentes JVMs? R/ Un solo archivo con las propiedades en donde los subsistemas arman una estructura de arbol
+combine.conf:
+MyAppl {
+version = 10
+description = "My application"
+}
+subApplA {
+MyAppl {
+description = "Sub application"  pg 156 muestra como esta propiedad sobreescribe o se sobrepone sobre la de arriba 
+}
+} 
+
+
+::::::7.2 Logging (write messages to al log):::::::::::::::
+Es un tema que los developers realizan como cada un cree que es más cómodo (en cuanto a librerías a usar, filosofía etc).
+
+Pero Akka toolkit tiene un loggin adapter:
+
+:::::::7.2.1 Logging in an Akka application:::::::::::::::::::::::::
+
+El loggin adapter usa eventStream para enviar mensajes al eventHandler.
+Muy bacano cuando dice que loggin menas I/O (y esto significa bloquedo, esperar en un ambiente concurrente)
+Usando de akka loggin se soluciona esto 
+
+pg158 real:
+
+
+
+
+
+

@@ -71,8 +71,35 @@ normal (es un proxy que interviene dichos mensajes ), tambiíen se puede dar que
 
 ::::::::::::::::::::::::::::::::::::.::::::::::::::::::::::::::::::::::::.
 
+:::::::::::::6.2.4-Remote deployment (el anterior 6.2.3 era remote lookup)::::::::::::::::
+
+Se puede hacer programaticamente , sobretodo si es dinamico
+O por archivo de configuración
+Ejemplo de archivo de configuración:
+actor {
+	provider = "akka.remote.RemoteActorRefProvider"
+		deployment {
+			/boxOffice {
+				remote = "akka.tcp://backend@0.0.0.0:2552"
+			}
+		}
+}
+
+
+
+
+En ambos 6.2.4 y 6.2.3 LOS nodos front y backend libremente pueden iniciarsen en cualquier orden.
+
+
+
+::::6.2.5 Multi-JVM testing:::::::::::::::::::::::::::::::::::::::::::::::
+EL sbt multi-JVM plugin hace posible el correr pruebas a través de multiples JVMs,  ayuda a realizar pruebas sobre actores distribuidos  en diferentes nodos (otro nodo con otra jvm en la vida real) see og 140 real.
+
+val frontend = role("frontend")//los roles se usan para identificar el nodo en la pruebas unitarias
 
 
 
 
 
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
