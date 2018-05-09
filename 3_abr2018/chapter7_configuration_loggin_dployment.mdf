@@ -40,7 +40,47 @@ El loggin adapter usa eventStream para enviar mensajes al eventHandler.
 Muy bacano cuando dice que loggin menas I/O (y esto significa bloquedo, esperar en un ambiente concurrente)
 Usando de akka loggin se soluciona esto 
 
-pg158 real:
+pg158 :
+Muestra un ejemplo con SLF4J ()Simple Logging Facade for Java)
+
+
+
+7.2.2 Using logging:::::::::
+
+
+7.2.3 Controlling Akka’s logging
+pg 160 Muestra todo lo que podemos configurar, ejemplo logear todo lo que mism actores procesaan (método receive, al parecer el método receive debe ser de 
+akka.event
+.LoggingReceive)
+
+class MyActor extends Actor with ActorLogging { ----al incluir ActorLogging se adiciona la implementación akka.event.LoggingReceive 
+def receive = LoggingReceive {
+case ... => ...
+}
+}
+
+tabién está el logear todos los autos mensajes ((Kill, PoisonPill and the like))
+
+FSM: Finite state machine
+
+
+::::::::::7.3 Deploying actor-based applications::::::::::::::::::::::::::
+La idea es crear una distribucion de la aplicacion 
+eg : sbt-native-packager
+
+SEE EXAMPLE PG162 REAL
+
+Para la generación del jar se debe incluir en el archivo plugins.sbt en el directorio <project home>/project las siguiente línea:
+addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.0.0")
+y luego configurar el build.sbt de la raiz del proyecto see pg 164 
+
+>Iniciar sbt y ejecutar el comando 
+>stage : Crea toda la estructura de archivos de la distribución y crea dos archivos para iniciar el app (para wond y linux)
+ejemplo de win deploy.bat
+./deploy
+
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
 
 
 
