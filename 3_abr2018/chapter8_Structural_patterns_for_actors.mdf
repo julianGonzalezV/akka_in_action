@@ -1,0 +1,80 @@
+
+Vamos a ver enterprise integration patterns (EIPs), que son varios patrones que podemos aplicar usando akka actor system.
+
+::::::8.1 Pipes and filters::::::::::::::::::::::::::
+Pipes:
+- El concepto de piping hace referencia a que un proceso inyecta su resultado a otro proceso y así sucesivamente.
+
+
+::::::::::::::::::::::::::8.1.1 Enterprise integration pattern: pipes and filters
+Constraints are filters, and the interconnects are the pipes (pg 167 real).
+La idea es que en el piping existan filtros que no envíen toda es cantidad de mensajes o datos innecesarios (ejemplo de una fotomulta, soolo envía a la central lo que no tengan licencia o lo que exceden la velocidad).
+
+Cadao filtro tiene el pIpe dentrada-->Un Procesador(que valida algo) --> y el pipe de salida, condición: Que todos los filtros deben recibir u enviar los mismos
+mensajes (interface comun para todos)
+
+:::::::::::::::8.1.2 Pipes and filters in Akka::::::::::::::
+
+Usamos los Actores para implementar los Filters
+La interface es la misma para todos los actores, es decir los mensajes recibidos y enviados por todolos los actores son los mismos 
+
+Pg 170: Muestra como es primordial tener el pipe ordenado correctamente por los filters(actores) que más registros descarten para mejorar el performance
+La fortaleza del patrón es que no importa el orden el resultado será siempre el mismo pero el performance si puede ser diferente por el comentario en la linea anterior.
+
+gather: Collect 
+scatter: spread / distributor
+
+:::::::::8.2 Enterprise integration pattern: scatter-gather:::::::::::::::::::::::::::::::::::::::::::::::::::
+En 8.1.1 vimos como las tareas se ejecutaban secuencialmente y que hay del procesamiento en paralelo, o finalizar por este standar cuando se tengan varios??
+El gather en este caso es el Filter, que sería un Actor (Aggregator actor)
+EL scatter es el recipient list, que sería un actor se podría llamar RecipientList (o finalizar por este standar cuando se tengan varios)
+see pg 172
+
+Casos de Exito :
+COMPETING TASKS: pg 172
+Competing tasks aspect, as only the best result will be used.
+
+
+PARALLEL COOPERATIVE PROCESSING (pg 173).
+
+Cuando una tarea esta ejecutando una Sub-Tarea.
+cuando por ejemplo la tarea debe retornar el Objeto Persona pero se debe:
+-1 Consultar en las diferentes centrales de riesgo.
+-2 Consultar comportamiento en las redes sociales y que no tenga a fake profile
+-3 ..
+...Y finalmente retornar el Objeto persona con toda la información.
+
+8.2.2 Parallel tasks with Akka
+En el ejemplo anterior Persona sería el case class, y cada operación 1..2.. (filters) son actores que reciben el mensaje de tipo Persona (el case class)
+
+8.2.3 Implementing the scatter component using the recipient list pattern:
+
+El actor RecipientList implementa el recieve de la siguiente forma 
+def receive = {
+case msg: AnyRef => recipientList.foreach(_ ! msg)
+}
+Pero hay caso en que la lógica debe ser más elaborada cómo por ejemplo en un listado de numeros enviar del 1-10 en un nodo del 11-20 en otro etc 
+
+Note como en la pg 175 prueban 3 actores con TestProbe
+
+8.2.4 Implementing the gather component with the aggregator pattern
+Ahora vamos por lo datos de vuelta:
+
+aggregator pattern Se usa para combinar multiples mensaje dentro de uno solo
+Algo a tener en cuenta es que los mensajes que vayan saliendo de cada proceso deben ser almacenados en alguna parte, para que al final cuando existan varios
+se pueda hacer el aggregation.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
