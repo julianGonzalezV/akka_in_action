@@ -64,6 +64,19 @@ aggregator pattern Se usa para combinar multiples mensaje dentro de uno solo
 Algo a tener en cuenta es que los mensajes que vayan saliendo de cada proceso deben ser almacenados en alguna parte, para que al final cuando existan varios
 se pueda hacer el aggregation.
 
+pg 178 muestra como solucionar el caso de cuando uno de los mensajes se pierde o no se recibe uno de ellos y en resumen, espera un cierto tempo y se envía un mensaje a si mismo (al Aggregator actor) de tipo TimeoutMessage
+
+
+Pg 179: Se encarga de mostrar el manejo cuando el actor se muere y toca reiniciarlo, para ellos la lógica de recuperación de hace en preRestart method.
+Pg 180: Interesante el hecho de que a pesar de que se envíe un error antes del mensaje2 el igual hace el combining correctamente, porque mantiene los mensajes
+en medio de errores, eso se conoce COMO DURABILITY
+
+
+
+8.2.5 Combining the components into the scatter-gather pattern::::::::::
+
+
+
 
 
 
