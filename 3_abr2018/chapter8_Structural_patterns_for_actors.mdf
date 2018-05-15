@@ -73,12 +73,17 @@ en medio de errores, eso se conoce COMO DURABILITY
 
 
 
-8.2.5 Combining the components into the scatter-gather pattern::::::::::
+8.2.5 Combining the components into the scatter-gather pattern::::::::::(PG 181, 182(combining with pipes)  real)
 
 
+8.3 Enterprise integration pattern: ROUTING SLIP:::::::::::::::::::::
+Este patrón de integración es una versión dinámica del patron "pipes and filters"(pg 183)
 
+Dinámico porque por cada mensajes existe un SlipRouter(Un actor que contiene la referencia de los demás actores a ejecutar y además los enlista en una coleccion para qsaber el pipe al correrk, el RouteSlip simplemente envía el mensajq que le llegó
+), RouteSlip(Trait que deben implementar las tareas/actores que intervienen "with RouteSlip") que decide que pipe and filters ejecutar, el patron pipes and filters, en comparación con éste
+es estático 
 
-
+ver implementacion del patrón (184-185R)
 
 
 
