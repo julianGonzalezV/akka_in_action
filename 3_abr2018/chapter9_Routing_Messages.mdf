@@ -4,4 +4,43 @@ Routers are essential when you want to scale up or out.
 
 
 9.1 The enterprise integration router pattern:::::::::::::::
+Un router es capaz de ENVIAR MENSAJES hacia diferentes flujos o tareas,es decir que la idea del patrón se trata de construir lógica para determinar haca donde
+se debe enrrutar un mensaje, por la siguinetes razones:
+
+1) Performance: Debido a que una tarea toma demasiado tiempo PERO los mensajes pueden ser ejecutados en paralelo, no depende uno de otro (eje consultar el score crediticio de una persona es un mensaje y de otra es un mensaje toalmente diferente 
+)
+
+2) Contenido del mensaje: El mensaje tiene un atributo que dependiendo de su valor debe ir a una tara u otra.
+
+3) Estado de router: Sí el router está en un estado x (espera, sleeping,caído) debe ir a otro flujo, de lo contratrio se procesa normalmente.
+
+
+El set de tareas a las cuales un Router puede enviar mensajes se conoce como "routees" en akka.
+
+recordar que el principal motivo de routing es por LA NECESIDAD DE ESCALAR
+
+
+:::::::9.2 Balance load using Akka routers:::::::::::::::::::::::::::::::
+> One of the reasons to use a router is to balance the load over different actors,
+PARA MEJORA de performcane, Local (scale up) o remoto(scale out)
+
+Implementación:
+Router: Contiene la logica de enrrutamiento 
+RouterActor: El actor que representa el Router
+
+see figure 9.2 pg 190R
+
+Tipo de Routers:
+> Pool: It manages the routees (crear y eliminarlos conforme van terminando su ejecución), util cuando los routees son creados y distribuidos de la
+misma forma y la RECUPERACION de los routees no es una prioridad.
+> Group: They dont manage de Routees, los routeess son creados por el sistema y serán localizados mediante el ActorSelection por el Router 
+util para un mayor control del ciclo de vida de los routees.
+(see figure 9.3)
+(pg192--> Table 9.1 List of available routers within Akka)
+Los que más se usan son (pero no son los unicos ver la tabla):
+round-robin, 
+balancing, and consistent hashing(cuando requiero que varios mensajes lleguen al mismo rotee pero no importa cual )
+
+
+
 
