@@ -41,6 +41,62 @@ Los que más se usan son (pero no son los unicos ver la tabla):
 round-robin, 
 balancing, and consistent hashing(cuando requiero que varios mensajes lleguen al mismo rotee pero no importa cual )
 
+9.2.1 Akka pool router:::::::::::::::
+
+De nuevo util cuando los routees son creados y distribuidos de la
+misma forma y la RECUPERACION de los routees no es una prioridad.
+Dos formas de crearlo : I) Por configuración(see pg 193 y 194 la explicación)  II) vía código(menos flexible -- Listing 9.3) 
+
+
+
+Broadcast messages: Enviar un mensaje a todos los routees de un Router 
+El único Router que no funciona con Broadcast messag es el BalancingPool., debido a que todos los routess tienen el mismo mailbox
+
+(see pa 195) Es posible instanciar routess remotos
+ClusterRouterPool: Otro Router para crear routess en varios servidores remotos.
+
+
+DYNAMICALLY RESIZABLE POOL: hasta acá utilizamos cantidades fijas (eg 5) de routees, pero en la vida real la carga aumenta en ciertos meses etc.
+(la idea de dinámico es que ni falte ni se desperdicien recursos).
+(see pg 197)
+
+Supervision::::
+Ojo recordar que el router es el que crea los routees por lo cual a su vez el el SUPERVISOR DE estos. Un routee al fallar lo escala a su supervisor (el Router)
+pero como hasta ahora usamos los default Routers lo que va a pasar es que éste va a enviar el error a su supervisor (El mismo sistema o el que creó el Router)
+y por ejemplo si este decide reiniciar el actor (si el Router) entonces va a darse el efecto dominó, pues los routees al ser sus hijos se caerán todos también
+hay que tener bastante cuidado con esto porque recordemos que al inicio solo fallo un routee no todos (supongamos un ejemplo de un Router y 5 Routees)
+
+CUANDO UN routee termina en Pool el router detecta esto y lo saca, cuando se usa un Group este no lo termina sino que sigue neviando mensajes a este
+
+9.2.2 Akka group router:::
+Cuando se requiere más flexibilidad y control de los routees, ya que lo anterior , maneja los routees por NOSOTROS. Acá ya no se le pasa un numero de
+routess sino el listado de estos (ver Listing 9.6 GetLicenseCreator creating our routees)
+
+
+class GetLicenseCreator(nrActors: Int) extends Actor {
+override def preStart() {
+super.preStart()
+(0 until nrActors).map { nr =>
+context.actorOf(Props[GetLicense], "GetLicense"+nr)
+system.actorOf(Props( new GetLicenseCreator(2)),"Creator")
+}
+}
+}
+...
+}
+system.actorOf(Props( new GetLicenseCreator(2)),"Creator")
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
