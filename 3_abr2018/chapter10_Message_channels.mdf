@@ -2,4 +2,12 @@
 > Hasta ahora hemos usado el canal Point-to-point
 > publish-subscribe: La idea es que el sender no se preocupe para quién va o quién lo toma, también se conoce como EventQueue o EventBus.
 
-pg 214
+(pg 214)
+2 canales especiales que existen son:
+
+I) dead-letter channel, para mensajes que no debería ser enviados (debug, monitoreo )
+
+II) 
+
+::::::10.1 Channel types:::::::::::::::::::::::::::
+
