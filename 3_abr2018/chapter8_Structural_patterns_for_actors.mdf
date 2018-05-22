@@ -9,8 +9,10 @@ Pipes:
 ::::::::::::::::::::::::::8.1.1 Enterprise integration pattern: pipes and filters
 Constraints are filters, and the interconnects are the pipes (pg 167 real).
 La idea es que en el piping existan filtros que no envíen toda es cantidad de mensajes o datos innecesarios (ejemplo de una fotomulta, soolo envía a la central lo que no tengan licencia o lo que exceden la velocidad).
+y QUE LOS FILTROS a su vez sean colocados en el orden es´rategico así como en SQL que un filtro va primero que otro para mejorar 
+el performance
 
-Cadao filtro tiene el pIpe dentrada-->Un Procesador(que valida algo) --> y el pipe de salida, condición: Que todos los filtros deben recibir u enviar los mismos
+Cada filtro tiene el pipe dentrada-->Un Procesador(que valida algo) --> y el pipe de salida, condición: Que todos los filtros deben recibir u enviar los mismos
 mensajes (interface comun para todos)
 
 :::::::::::::::8.1.2 Pipes and filters in Akka::::::::::::::
@@ -25,7 +27,7 @@ gather: Collect
 scatter: spread / distributor
 
 :::::::::8.2 Enterprise integration pattern: scatter-gather:::::::::::::::::::::::::::::::::::::::::::::::::::
-En 8.1.1 vimos como las tareas se ejecutaban secuencialmente y que hay del procesamiento en paralelo, o finalizar por este standar cuando se tengan varios??
+En 8.1.1 vimos como las tareas se ejecutaban secuencialmente y ¿que hay del procesamiento en paralelo?.
 El gather en este caso es el Filter, que sería un Actor (Aggregator actor)
 EL scatter es el recipient list, que sería un actor se podría llamar RecipientList (o finalizar por este standar cuando se tengan varios)
 see pg 172

@@ -68,7 +68,7 @@ hay que tener bastante cuidado con esto porque recordemos que al inicio solo fal
 
 CUANDO UN routee termina en Pool el router detecta esto y lo saca, cuando se usa un Group este no lo termina sino que sigue neviando mensajes a este
 
-9.2.2 Akka group router:::
+9.2.2 Akka group router :::::::::::::::::::::::::::::::
 Cuando se requiere más flexibilidad y control de los routees, ya que lo anterior , maneja los routees por NOSOTROS. Acá ya no se le pasa un numero de
 routess sino el listado de estos (ver Listing 9.6 GetLicenseCreator creating our routees)
 
@@ -88,15 +88,74 @@ system.actorOf(Props( new GetLicenseCreator(2)),"Creator")
 
 
 
+En el código de la pg 203 cuando hacen router ! GetRoutees, es la manera de que siempre se obtenga los routess que realmente están disponibles
+actualmente, sino se hace esto entonces es posible que el router siga enviando mensajes a routees TERMINADOS OJO!! (El "case routees: Routees" es para cumplir
+ con lo que decimos en, ya que le llega los routes actuales )
+ active.remove(index): Lo que hace es remover los que ESTÁN DISPONIBLES, al final quedan los que ya no están activos o fueron terminado!!
+
+En el  case Terminated(child) => router ! GetRoutee : En este caso  GetRoutee es para evitar 
+> Por todas esos pitfalls (trampillas) y trucos que se deben realizar la teoría recomienda no hacerlo (entonces para que lo muestra :( )
+
+9.2.3 ConsistentHashing router :::::::::::::::::::::::::::::::
+
+Que pasa cuando cuando se maneja estados en los routees basado en el mensaque que se recibe, como en gatter and scatter cuando se combinaban los mensajes
+Ver(Listing 9.12 Joining two message into one pg 206)
+
+>pg 205 (pasos para mapear mensajes con routees, saber a que routee debe ir un mensaje en especifico) 
+
+::Step 1 translates a message to a message key object.
+
+
+	>three ways to translate the message into a message key:
+
+	I) A partial function is specified in the router. (UTIL CUANDO EL ROUTER DESEA DISTRIBUIR EL MISMO TIPO DE MENSAJE A VARIOS ROUTEES)
+	This makes the decision specific to that router. (see pg 207)
+	def hashMapping: ConsistentHashMapping = {
+			case msg: GatherMessage => msg.id
+		}
+	
+	II) The message implements akka.routing.ConsistentHashingRouter.Consistent-
+	Hashable.(UTIL CUANDO EL kEY DEl mensaje es siempre el mismo)
+	This makes the decision specific for the messages used.
+		MESSAGE HAS A HASHMAPPING (PG 207)
+	
+	III) The messages can be wrapped in a akka.routing.ConsistentHashingRouter
+	.ConsistentHashableEnvelope.(less preferable, por alto acoplamiento entre el sender y los routees)
+	This makes the decision specific for the sender. The sender knows which key
+	to use. (UTIL CUANDO SE DESEA QUE LOS EMENSAJES LLEGUEN SIMPRE A UN MISMO ROUTER SIN IMOPORTAR EL SENDER)
+	
+	SENDER HAS A HASHMAPPING(pg 208): Consiste en enviar un mensaje de tipo ConsistentHashableEnvelope que contiene (envuelve el mensaje real)
+	
+
+::Step 2 creates a hash code from this message key.
+
+::Step 3 Map hash code to a virtual node
+
+::Step 4 Map virtual node to a routee: Mapea los routees que gestiona los mensajes para X virtual node 
+Por que un virtual Node?: R/ Para la asignacion nequitativa de mensajes sobre los Routees existentes
+
+
+:::::::::9.3 Implementing the router pattern using actors::::::::::::::::::::::
+
+- iMPLEMENTAR el router pattern pero usando solo Actores
+
+
+::::::9.3.1 Message OR Content-based routing:::::::::::::::::::::::
+De acuerdo al contenido del mansaje (el valor de un atributo o más de éste mensaje) se TOMA LA DECISIÓN  de enrrutar el mensaje a X o Y.
+
+::::::9.3.2 State-based routing:::::::::::::::::::::::
+Cambiar el enrrutado basado en el state del Router , no es necesario el uso de Routers sino que con un Actor sencillo y con un atributo de clase que 
+represente el estado podemos trabajar.
+> Usando become/unbecome para cambiar el comportamiento del actor y decirdir donde enrrutar los mensajes
+Ver ejemplos en pg 210 
+
+::::::::9.3.3 Router implementations::::::::::::::::::::::::::::::
+
+Implementar GetSpeed and SpeedRouter into one actor.(pg 211 Figure 9.7)
 
 
 
-
-
-
-
-
-
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
 
