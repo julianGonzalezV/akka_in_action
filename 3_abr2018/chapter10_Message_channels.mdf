@@ -1,0 +1,5 @@
+> La idea es conocer los diferentes canales de mensajería que se pueden usar para el envío de mensajes entre Acotres
+> Hasta ahora hemos usado el canal Point-to-point
+> publish-subscribe: La idea es que el sender no se preocupe para quién va o quién lo toma, también se conoce como EventQueue o EventBus.
+
+pg 214
